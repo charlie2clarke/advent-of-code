@@ -30,9 +30,9 @@ func main() {
 		}
 	}
 
-	sort.IntSlice(eachCalories).Sort()
+	sort.Sort(sort.Reverse(sort.IntSlice(eachCalories)))
 
-	firstHighest, secondHighest, thirdHighest := eachCalories[len(eachCalories)-1], eachCalories[len(eachCalories)-2], eachCalories[len(eachCalories)-3]
+	firstHighest, secondHighest, thirdHighest := eachCalories[1], eachCalories[2], eachCalories[3]
 
 	fmt.Printf("Part 1: %v\n", firstHighest)
 	fmt.Printf("Part 2: %v", firstHighest+secondHighest+thirdHighest)
