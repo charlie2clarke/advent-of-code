@@ -3,17 +3,13 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"log"
 	"os"
 	"sort"
 	"strconv"
 )
 
 func main() {
-	file, err := os.Open("input.txt")
-	if err != nil {
-		log.Fatal(err)
-	}
+	file, _ := os.Open("input.txt")
 	defer file.Close()
 	scanner := bufio.NewScanner(file)
 

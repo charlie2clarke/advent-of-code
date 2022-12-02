@@ -37,37 +37,13 @@ type Part2Round struct {
 
 func (r Part2Round) Score() int {
 	if r.mine == WIN {
-		return WIN.OutcomeScore() + GetWinningMove(r.opponent).MoveScore()
+		return WIN.OutcomeScore() + r.opponent.WinningMove().MoveScore()
 	} else if r.mine == DRAW {
 		return DRAW.OutcomeScore() + r.opponent.MoveScore()
 	} else if r.mine == LOSS {
-		return LOSS.OutcomeScore() + GetLosingMove(r.opponent).MoveScore()
+		return LOSS.OutcomeScore() + r.opponent.LosingMove().MoveScore()
 	} else {
 		panic("Invalid outcome")
-	}
-}
-
-func GetWinningMove(opponent Move) Move {
-	if opponent == ROCK {
-		return PAPER
-	} else if opponent == PAPER {
-		return SCISSORS
-	} else if opponent == SCISSORS {
-		return ROCK
-	} else {
-		panic("Invalid opponent move")
-	}
-}
-
-func GetLosingMove(opponent Move) Move {
-	if opponent == ROCK {
-		return SCISSORS
-	} else if opponent == PAPER {
-		return ROCK
-	} else if opponent == SCISSORS {
-		return PAPER
-	} else {
-		panic("Invalid opponent move")
 	}
 }
 
@@ -98,6 +74,30 @@ func (m Move) MoveScore() int {
 		return 2
 	} else if m == SCISSORS {
 		return 3
+	} else {
+		panic("Invalid move")
+	}
+}
+
+func (m Move) WinningMove() Move {
+	if m == ROCK {
+		return PAPER
+	} else if m == PAPER {
+		return SCISSORS
+	} else if m == SCISSORS {
+		return ROCK
+	} else {
+		panic("Invalid move")
+	}
+}
+
+func (m Move) LosingMove() Move {
+	if m == ROCK {
+		return SCISSORS
+	} else if m == PAPER {
+		return ROCK
+	} else if m == SCISSORS {
+		return PAPER
 	} else {
 		panic("Invalid move")
 	}
@@ -140,8 +140,7 @@ func main() {
 	defer file.Close()
 	scanner := bufio.NewScanner(file)
 
-	part1Score := 0
-	part2Score := 0
+	part1Score, part2Score := 0, 0
 
 	for scanner.Scan() {
 		part1Score += part1(scanner.Text())
