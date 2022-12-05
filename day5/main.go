@@ -4,51 +4,9 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+
+	"github.com/charlie2clarke/advent-of-code-2022/datastructures"
 )
-
-type Stack[T any] []T
-
-func NewStack[T any]() *Stack[T] {
-	return &Stack[T]{}
-}
-
-func (s *Stack[T]) Push(v T) {
-	*s = append(*s, v)
-}
-
-func (s *Stack[T]) Pop() T {
-	v := (*s)[len(*s)-1]
-	*s = (*s)[:len(*s)-1]
-	return v
-}
-
-func (s *Stack[T]) Peek() T {
-	return (*s)[len(*s)-1]
-}
-
-func (s *Stack[T]) IsEmpty() bool {
-	return len(*s) == 0
-}
-
-func (s *Stack[T]) Len() int {
-	return len(*s)
-}
-
-func (s *Stack[T]) Swap(i, j int) {
-	(*s)[i], (*s)[j] = (*s)[j], (*s)[i]
-}
-
-func (s *Stack[T]) Reverse() {
-	for i, j := 0, len(*s)-1; i < j; i, j = i+1, j-1 {
-		s.Swap(i, j)
-	}
-}
-
-func (s *Stack[T]) Copy() *Stack[T] {
-	s2 := NewStack[T]()
-	*s2 = append(*s2, *s...)
-	return s2
-}
 
 var input = [][]string{
 	{"G", "T", "R", "W"},
@@ -116,30 +74,11 @@ func main() {
 	fmt.Printf("Part 2: %s\n", pt2)
 }
 
-func loadStacks(input [][]string) [9]Stack[string] {
-	var stacks [9]Stack[string]
+func loadStacks(input [][]string) [9]datastructures.Stack[string] {
+	var stacks [9]datastructures.Stack[string]
 	for i := 0; i < len(input); i++ {
 		for j := 0; j < len(input[i]); j++ {
-			switch i {
-			case 0:
-				stacks[0].Push(input[i][j])
-			case 1:
-				stacks[1].Push(input[i][j])
-			case 2:
-				stacks[2].Push(input[i][j])
-			case 3:
-				stacks[3].Push(input[i][j])
-			case 4:
-				stacks[4].Push(input[i][j])
-			case 5:
-				stacks[5].Push(input[i][j])
-			case 6:
-				stacks[6].Push(input[i][j])
-			case 7:
-				stacks[7].Push(input[i][j])
-			case 8:
-				stacks[8].Push(input[i][j])
-			}
+			stacks[i].Push(input[i][j])
 		}
 	}
 
