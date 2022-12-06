@@ -37,18 +37,13 @@ func main() {
 func findMarker(signal string, windowLen int) int {
 	set := datastructures.NewSet[string]()
 
-	for i := 0; i < len(signal); i++ {
-		if i+windowLen > len(signal) {
-			break
-		}
-		window := signal[i : i+windowLen]
-
-		for j := 0; j < len(window); j++ {
-			set.Add(string(window[j]))
+	for i := windowLen; i < len(signal); i++ {
+		for _, c := range signal[i-windowLen : i] {
+			set.Add(string(c))
 		}
 
 		if set.Len() == windowLen {
-			return i + windowLen
+			return i
 		}
 
 		set.Clear()
