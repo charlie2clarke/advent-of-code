@@ -1,26 +1,21 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/charlie2clarke/advent-of-code-2022/datastructures"
 )
 
 func main() {
-	file, _ := os.Open("input.txt")
-	defer file.Close()
-	scanner := bufio.NewScanner(file)
+	file, _ := os.ReadFile("input.txt")
+	signal := strings.TrimSpace(string(file))
 
 	pt1, pt2 := 0, 0
 
-	for scanner.Scan() {
-		signal := scanner.Text()
-
-		pt1 += findMarker(signal, 4)
-		pt2 += findMarker(signal, 14)
-	}
+	pt1 += findMarker(signal, 4)
+	pt2 += findMarker(signal, 14)
 
 	fmt.Printf("Part 1: %v\n", pt1)
 	fmt.Printf("Part 2: %v\n", pt2)
