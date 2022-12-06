@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/charlie2clarke/advent-of-code-2022/datastructures"
+	"github.com/charlie2clarke/advent-of-code/datastructures"
 )
 
 var input = [][]string{

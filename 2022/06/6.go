@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/charlie2clarke/advent-of-code-2022/datastructures"
+	"github.com/charlie2clarke/advent-of-code/datastructures"
 )
 
 func main() {
