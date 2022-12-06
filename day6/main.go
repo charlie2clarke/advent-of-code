@@ -22,22 +22,13 @@ func main() {
 		pt2 += findMarker(signal, 14)
 	}
 
-	if pt1 == 0 {
-		panic("no solution found to part 1")
-	}
-
-	if pt2 == 0 {
-		panic("no solution found to part 2")
-	}
-
 	fmt.Printf("Part 1: %v\n", pt1)
 	fmt.Printf("Part 2: %v\n", pt2)
 }
 
 func findMarker(signal string, windowLen int) int {
-	set := datastructures.NewSet[string]()
-
 	for i := windowLen; i < len(signal); i++ {
+		set := datastructures.NewSet[string]()
 		for _, c := range signal[i-windowLen : i] {
 			set.Add(string(c))
 		}
@@ -45,8 +36,6 @@ func findMarker(signal string, windowLen int) int {
 		if set.Len() == windowLen {
 			return i
 		}
-
-		set.Clear()
 	}
 
 	return 0
