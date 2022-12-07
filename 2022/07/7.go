@@ -55,7 +55,9 @@ func main() {
 func part1(dirAndSize map[string]int) int {
 	var pt1 int
 	for _, size := range dirAndSize {
-		pt1 += size
+		if size <= 10000000 {
+			pt1 += size
+		}
 	}
 	return pt1
 }
