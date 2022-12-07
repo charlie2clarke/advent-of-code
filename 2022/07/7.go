@@ -1,119 +1,79 @@
 package main
 
 import (
-	"bufio"
+	"fmt"
 	"os"
-	"strconv"
+	"path"
 	"strings"
+	"unicode"
 )
 
-type CMD struct {
-	name   string
-	target string
-}
-
-type Dir struct {
-	name      string
-	parent    *Dir
-	children  []Dir
-	files     []File
-	totalSize int
-}
-
-func (d *Dir) size() int {
-	if d.totalSize != 0 {
-		return d.totalSize
-	}
-
-	for _, file := range d.files {
-		d.totalSize += file.size
-	}
-
-	for _, child := range d.children {
-		d.totalSize += child.size()
-	}
-
-	return d.totalSize
-}
-
-type File struct {
-	name string
-	size int
-}
-
 func main() {
-	file, _ := os.Open("input.txt")
-	scanner := bufio.NewScanner(file)
+	file, _ := os.ReadFile("input.txt")
+	input := strings.Split(string(file), "\n")
 
-	dirs := make([]*Dir, 0)
-	var currentDir *Dir
+	dirAndSize := map[string]int{}
+	currentPath := ""
 
-	for scanner.Scan() {
-		line := scanner.Text()
+	isCdCmd := func(line string) bool {
+		return strings.HasPrefix(line, "$ cd")
+	}
 
-		if strings.HasPrefix(line, "$") {
-			cmd := &CMD{}
-			splitLine := strings.Split(line, " ")
+	isLsCmd := func(line string) bool {
+		return strings.HasPrefix(line, "$ ls")
+	}
 
-			switch splitLine[1] {
-			case "cd":
-				cmd.name = splitLine[1]
-				cmd.target = splitLine[2]
+	isFile := func(line string) bool {
+		return unicode.IsDigit(rune(line[0]))
+	}
 
-				if cmd.target == ".." {
-					currentDir = currentDir.parent
-					continue
-				}
-
-				currentDir = &Dir{name: cmd.target, parent: currentDir}
-			case "ls":
-				cmd.name = splitLine[1]
-
-				contents := getLsContents(scanner)
-				if contents == nil {
-					panic("couldn't get ls contents")
-				}
-
-				currentDir.children = append(currentDir.children, contents.dirs...)
-				currentDir.files = append(currentDir.files, contents.files...)
+	for _, line := range input {
+		if isCdCmd(line) {
+			currentPath = path.Join(currentPath, strings.TrimPrefix(line, "$ cd "))
+		} else if isLsCmd(line) {
+			continue
+		} else if isFile(line) {
+			var size, name = 0, ""
+			parses, err := fmt.Sscanf(line, "%d %s", &size, &name)
+			if err != nil || parses != 2 {
+				panic("parse error")
 			}
 
-			currentDir.totalSize = currentDir.size()
-			dirs = append(dirs, currentDir)
-		}
-	}
-}
-
-type LsContents struct {
-	dirs  []Dir
-	files []File
-}
-
-func getLsContents(scanner *bufio.Scanner) *LsContents {
-	contents := &LsContents{
-		dirs:  make([]Dir, 0),
-		files: make([]File, 0),
-	}
-
-	for scanner.Scan() {
-		line := scanner.Text()
-
-		if line == "" || strings.HasPrefix(line, "$") {
-			break
-		}
-
-		splitLine := strings.Split(line, " ")
-		if splitLine[0] == "dir" {
-			contents.dirs = append(contents.dirs, Dir{name: splitLine[1]})
-		} else {
-			size, err := strconv.Atoi(splitLine[0])
-			if err != nil {
-				panic("couldn't convert size to an int")
+			for dir := currentPath; dir != "/"; dir = path.Dir(dir) {
+				dirAndSize[dir] += size
 			}
-
-			contents.files = append(contents.files, File{name: splitLine[1], size: size})
+			dirAndSize["/"] += size
 		}
 	}
 
-	return contents
+	pt1, pt2 := part1(dirAndSize), part2(dirAndSize)
+
+	fmt.Printf("Part 1: %v\n", pt1)
+	fmt.Printf("Part 2: %v\n", pt2)
+}
+
+func part1(dirAndSize map[string]int) int {
+	var pt1 int
+	for _, size := range dirAndSize {
+		pt1 += size
+	}
+	return pt1
+}
+
+func part2(dirAndSize map[string]int) int {
+	maxMemAllowed := 70000000 - 30000000
+	memUsed := dirAndSize["/"]
+	minDirSize := memUsed
+
+	for dir, size := range dirAndSize {
+		if dir == "/" {
+			continue
+		}
+
+		if memUsed-size < maxMemAllowed && size < minDirSize {
+			minDirSize = size
+		}
+	}
+
+	return minDirSize
 }
