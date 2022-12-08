@@ -1,13 +1,12 @@
-
-	{
-		"version": "0.2.0",
-		"configurations": [
-			{
-				"name": "Launch Package",
-				"type": "go",
-				"request": "launch",
-				"mode": "auto",
-				"program": "${workspaceFolder}/2022/08/8.go"
-			}
-		]
-	}
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Launch Package",
+			"type": "go",
+			"request": "launch",
+			"mode": "auto",
+			"program": "${workspaceFolder}/playground/image_pkg.go"
+		}
+	]
+}

@@ -18,19 +18,18 @@ func main() {
 		input = append(input, row)
 	}
 
-	visibleCount := part1(input)
-	scenicScore := part2(input)
+	visibleCount, scenicScore := part1(input), part2(input)
 
 	fmt.Printf("Part 1: %d\n", visibleCount)
 	fmt.Printf("Part 2: %d\n", scenicScore)
 }
 
-func part1(input [][]int) int {
-	edgeCount := func(input [][]int) int {
+func part1(trees [][]int) int {
+	edgeCount := func(trees [][]int) int {
 		edgeCount := 0
-		for i := 0; i < len(input); i++ {
-			for j := 0; j < len(input[i]); j++ {
-				if i == 0 || i == len(input)-1 || j == 0 || j == len(input[i])-1 {
+		for i := 0; i < len(trees); i++ {
+			for j := 0; j < len(trees[i]); j++ {
+				if i == 0 || i == len(trees)-1 || j == 0 || j == len(trees[i])-1 {
 					edgeCount++
 				}
 			}
@@ -38,47 +37,47 @@ func part1(input [][]int) int {
 		return edgeCount
 	}
 
-	visibleCount := edgeCount(input)
+	visibleCount := edgeCount(trees)
 
-	isVisibleFromLeft := func(currentTree int, input [][]int, i, j int) bool {
+	isVisibleFromLeft := func(currentTree int, trees [][]int, i, j int) bool {
 		for k := j - 1; k >= 0; k-- {
-			if input[i][k] >= currentTree {
+			if trees[i][k] >= currentTree {
 				return false
 			}
 		}
 		return true
 	}
 
-	isVisibleFromRight := func(currentTree int, input [][]int, i, j int) bool {
-		for k := j + 1; k < len(input[i]); k++ {
-			if input[i][k] >= currentTree {
+	isVisibleFromRight := func(currentTree int, trees [][]int, i, j int) bool {
+		for k := j + 1; k < len(trees[i]); k++ {
+			if trees[i][k] >= currentTree {
 				return false
 			}
 		}
 		return true
 	}
 
-	isVisibleFromTop := func(currentTree int, input [][]int, i, j int) bool {
+	isVisibleFromTop := func(currentTree int, trees [][]int, i, j int) bool {
 		for k := i - 1; k >= 0; k-- {
-			if input[k][j] >= currentTree {
+			if trees[k][j] >= currentTree {
 				return false
 			}
 		}
 		return true
 	}
 
-	isVisibleFromBottom := func(currentTree int, input [][]int, i, j int) bool {
-		for k := i + 1; k < len(input); k++ {
-			if input[k][j] >= currentTree {
+	isVisibleFromBottom := func(currentTree int, trees [][]int, i, j int) bool {
+		for k := i + 1; k < len(trees); k++ {
+			if trees[k][j] >= currentTree {
 				return false
 			}
 		}
 		return true
 	}
 
-	for i := 1; i < len(input)-1; i++ {
-		for j := 1; j < len(input[i])-1; j++ {
-			if isVisibleFromLeft(input[i][j], input, i, j) || isVisibleFromRight(input[i][j], input, i, j) || isVisibleFromTop(input[i][j], input, i, j) || isVisibleFromBottom(input[i][j], input, i, j) {
+	for i := 1; i < len(trees)-1; i++ {
+		for j := 1; j < len(trees[i])-1; j++ {
+			if isVisibleFromLeft(trees[i][j], trees, i, j) || isVisibleFromRight(trees[i][j], trees, i, j) || isVisibleFromTop(trees[i][j], trees, i, j) || isVisibleFromBottom(trees[i][j], trees, i, j) {
 				visibleCount++
 			}
 		}
@@ -87,62 +86,57 @@ func part1(input [][]int) int {
 	return visibleCount
 }
 
-func part2(input [][]int) int {
+func part2(trees [][]int) int {
 	highestScenicScore := 0
 
-	calcScenicScore := func(leftDistance int, rightDistance int, topDistance int, bottomDistance int) int {
-		return leftDistance * rightDistance * topDistance * bottomDistance
-	}
-
-	leftDistance := func(currentTree int, input [][]int, i, j int) int {
+	leftDistance := func(currentTree int, trees [][]int, i, j int) int {
 		distance := 0
 		for k := j - 1; k >= 0; k-- {
 			distance++
-			if input[i][k] >= currentTree {
+			if trees[i][k] >= currentTree {
 				return distance
 			}
 		}
 		return distance
 	}
 
-	rightDistance := func(currentTree int, input [][]int, i, j int) int {
+	rightDistance := func(currentTree int, trees [][]int, i, j int) int {
 		distance := 0
-		for k := j + 1; k < len(input[i]); k++ {
+		for k := j + 1; k < len(trees[i]); k++ {
 			distance++
-			if input[i][k] >= currentTree {
+			if trees[i][k] >= currentTree {
 				return distance
 			}
 		}
 		return distance
 	}
 
-	topDistance := func(currentTree int, input [][]int, i, j int) int {
+	topDistance := func(currentTree int, trees [][]int, i, j int) int {
 		distance := 0
 		for k := i - 1; k >= 0; k-- {
 			distance++
-			if input[k][j] >= currentTree {
+			if trees[k][j] >= currentTree {
 				return distance
 			}
 		}
 		return distance
 	}
 
-	bottomDistance := func(currentTree int, input [][]int, i, j int) int {
+	bottomDistance := func(currentTree int, trees [][]int, i, j int) int {
 		distance := 0
-		for k := i + 1; k < len(input); k++ {
+		for k := i + 1; k < len(trees); k++ {
 			distance++
-			if input[k][j] >= currentTree {
+			if trees[k][j] >= currentTree {
 				return distance
 			}
 		}
 		return distance
 	}
 
-	for i := 0; i < len(input); i++ {
-		for j := 0; j < len(input[i]); j++ {
-			leftDistance, rightDistance, topDistance, bottomDistance := leftDistance(input[i][j], input, i, j), rightDistance(input[i][j], input, i, j), topDistance(input[i][j], input, i, j), bottomDistance(input[i][j], input, i, j)
+	for i := 0; i < len(trees); i++ {
+		for j := 0; j < len(trees[i]); j++ {
+			scenicScore := leftDistance(trees[i][j], trees, i, j) * rightDistance(trees[i][j], trees, i, j) * topDistance(trees[i][j], trees, i, j) * bottomDistance(trees[i][j], trees, i, j)
 
-			scenicScore := calcScenicScore(leftDistance, rightDistance, topDistance, bottomDistance)
 			if scenicScore > highestScenicScore {
 				highestScenicScore = scenicScore
 			}
