@@ -7,7 +7,7 @@
 				"type": "go",
 				"request": "launch",
 				"mode": "auto",
-				"program": "${workspaceFolder}/2022/10/10.go"
+				"program": "${workspaceFolder}/2022/11/11.go"
 			}
 		]
 	}
