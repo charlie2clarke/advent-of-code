@@ -9,51 +9,52 @@ import (
 	"github.com/charlie2clarke/advent-of-code/datastructures"
 )
 
-func main() {
-	file, _ := os.ReadFile("input.txt")
-	grid := make(map[image.Point]rune)
-	deltas := map[string]image.Point{
-		"left":  {-1, 0},
-		"right": {1, 0},
-		"up":    {0, -1},
-		"down":  {0, 1},
-	}
+func loadGrid(file string) (map[image.Point]rune, image.Point, image.Point) {
+	grid, start, end := make(map[image.Point]rune), image.Point{}, image.Point{}
 
-	var start, end image.Point
-	for y, line := range strings.Fields(string(file)) {
-		for x, char := range line {
-			if char == 'S' {
+	for x, line := range strings.Fields(string(file)) {
+		for y, height := range line {
+			grid[image.Point{x, y}] = height
+
+			if height == 'S' {
 				start = image.Point{x, y}
-			} else if char == 'E' {
+			} else if height == 'E' {
 				end = image.Point{x, y}
 			}
-
-			grid[image.Point{x, y}] = char
 		}
 	}
-	grid[start] = 'a'
-	grid[end] = 'z'
+	grid[start], grid[end] = 'a', 'z'
 
-	visited := make(map[image.Point]bool)
-	queue := datastructures.Queue[image.Point]{end}
-	stack := datastructures.NewStack[image.Point]()
-	stack.Push(end)
-	distance := map[image.Point]int{end: 0}
+	return grid, start, end
+}
 
-	for queue.Size() > 0 {
+func main() {
+	file, _ := os.ReadFile("input.txt")
+	grid, start, end := loadGrid(string(file))
+
+	queue, distance := datastructures.Queue[image.Point]{end}, map[image.Point]int{end: 0}
+	var shortest *image.Point
+
+	for !queue.IsEmpty() {
 		current := queue.Dequeue()
-		visited[current] = true
 
-		for _, delta := range deltas {
+		if grid[current] == 'a' && shortest == nil {
+			shortest = &current
+		}
+
+		for _, delta := range []image.Point{{-1, 0}, {1, 0}, {0, -1}, {0, 1}} {
 			next := current.Add(delta)
+			_, isVisited := distance[next]
 			_, inGrid := grid[next]
+			isValidHeight := grid[current] <= grid[next]+1
 
-			if !visited[next] && inGrid && grid[current] <= grid[next]+1 {
+			if inGrid && !isVisited && isValidHeight {
 				distance[next] = distance[current] + 1
 				queue.Enqueue(next)
 			}
 		}
 	}
 
-	fmt.Printf("Part 1: %v", grid[start])
+	fmt.Printf("Part 1: %d\n", distance[start])
+	fmt.Printf("Part 2: %d\n", distance[*shortest])
 }
