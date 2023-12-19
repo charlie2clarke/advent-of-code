@@ -34,34 +34,24 @@ int main()
 
         sscanf(cubes.c_str(), "%d %c", &num, &colour);
         if (num > possibleGames[colour])
-        {
           possible = false;
-        }
 
         if (num > maxColours[colour])
-        {
           maxColours[colour] = num;
-        }
       }
     }
     games.push_back(possible);
     int gamePower = 1;
     for (const auto & pair : maxColours)
-    {
       gamePower *= pair.second;
-    }
     power += gamePower;
   }
   file.close();
 
   int part1 = 0;
   for (int i = 0; i < games.size(); i++)
-  {
     if (games[i])
-    {
       part1 += i + 1;
-    }
-  }
 
   cout << "Part 1: " << part1 << endl;
   cout << "Part 2: " << power << endl;
