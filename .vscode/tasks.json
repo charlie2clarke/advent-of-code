@@ -8,7 +8,7 @@
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
-                "./2023/01/1.cpp",
+                "./2023/02/2.cpp",
                 "-o",
                 "cpp_solution.out",
                 "-D_GLIBCXX_DEBUG"

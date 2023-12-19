@@ -7,9 +7,6 @@
 			"type": "cppdbg",
 			"request": "launch",
 			"program": "${workspaceFolder}/cpp_solution.out",
-			"args": [
-				"${workspaceFolder}/2023/01/input.txt"
-			],
 			"stopAtEntry": false,
 			"cwd": "${fileDirname}",
 			"environment": [],
