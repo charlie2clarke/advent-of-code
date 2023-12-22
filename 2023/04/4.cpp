@@ -8,7 +8,7 @@
 #include <vector>
 using namespace std;
 
-set<string> parseInts(string s)
+set<string> parseCard(string s)
 {
   set<string> out;
   stringstream ss(s);
@@ -36,15 +36,15 @@ vector<array<set<string>, 2>> loadInput()
   {
     line = line.substr(line.find(": ") + 2);
     size_t sep = line.find(" | ");
-    set<string> wins = parseInts(line.substr(0, sep)), nums = parseInts(line.substr(sep + 3)), accWins;
-    input.emplace_back(array<set<string>, 2>{{parseInts(line.substr(0, sep)), parseInts(line.substr(sep + 3))}});
+    set<string> wins = parseCard(line.substr(0, sep)), nums = parseCard(line.substr(sep + 3)), accWins;
+    input.emplace_back(array<set<string>, 2>{{parseCard(line.substr(0, sep)), parseCard(line.substr(sep + 3))}});
   }
   file.close();
 
   return input;
 }
 
-int wins(set<string> want, set<string> got)
+size_t wins(set<string> want, set<string> got)
 {
   set<string> wins;
   set_intersection(want.begin(), want.end(), got.begin(), got.end(), inserter(wins, wins.begin()));
